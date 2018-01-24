@@ -33,7 +33,7 @@ These are the topics covered in each lesson that i learned
 		the standard input and sends to the server.
 
 		Topics covered:  
-		**Java Threads and Runnables, synchronized methods**
+		**Java Threads and Runnables, synchronized methods, SocketServer and Sockets**
 
 
 ### Libraries used
