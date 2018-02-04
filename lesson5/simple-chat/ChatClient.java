@@ -40,10 +40,17 @@ public class ChatClient {
 
         try {
             Thread listener = new Thread(new Receiver(in));
+            Thread sender = new Thread(new Sender(stdIn, out));
             listener.start();
-            while (listener.isAlive()) {
-                out.println(stdIn.readLine());
+            sender.start();
+
+            try {
+                listener.join();
+            } catch (InterruptedException e) {
+                System.err.println("Error: Main thread interrupted: " + e.getMessage());
             }
+            sender.interrupt();
+
             out.close();
             in.close();
             clientSocket.close();

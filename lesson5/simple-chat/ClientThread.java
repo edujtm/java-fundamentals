@@ -29,8 +29,8 @@ public class ClientThread extends Thread {
             return;
         }
         out.println("Welcome user#" + id + ". Type #quit to quit chat.");
-        alertNewClient();
         out.flush();
+        alertNewClient();
 
         String line;
         try {
@@ -40,9 +40,9 @@ public class ClientThread extends Thread {
                 System.out.println("Message received from user#"+ id +": " + line);
                 // Message is sent to all other users
                 sendMessageToAll(line);
-                out.flush();
             }
             out.println("Bye user#" + id);
+            out.flush();
             out.close();
             in.close();
             socket.close();
@@ -58,14 +58,23 @@ public class ClientThread extends Thread {
 
     // TODO add private message method
     private synchronized void sendMessageToAll(String message) {
-        server.getClients().stream().filter(Objects::nonNull).forEach(client -> client.out.println("User#" + id + ": " + message));
+        server.getClients().stream().filter(Objects::nonNull).forEach(client -> {
+            client.out.println("User#" + id + ": " + message);
+            client.out.flush();
+        });
     }
 
     private synchronized void alertNewClient() {
-        server.getClients().stream().filter(client -> client != null && client != this).forEach(client -> client.out.println("The user#" + id + " has connected."));
+        server.getClients().stream().filter(client -> client != null && client != this).forEach(client -> {
+            client.out.println("The user#" + id + " has connected.");
+            client.out.flush();
+        });
     }
 
     private synchronized void alertDisconnect() {
-        server.getClients().stream().filter(client -> client != null && client != this).forEach(client -> client.out.println("The user#" + id + " has disconnected."));
+        server.getClients().stream().filter(client -> client != null && client != this).forEach(client -> {
+                client.out.println("The user#" + id + " has disconnected.");
+                client.out.flush();
+        });
     }
 }
